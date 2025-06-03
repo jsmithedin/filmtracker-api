@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  @apply bg-white text-black dark:bg-gray-900 dark:text-white;
+}
+
+html.dark {
+  color-scheme: dark;
+}
