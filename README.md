@@ -4,14 +4,15 @@ This project provides a FastAPI service for tracking camera film inventory. It u
 
 ## Development
 
-Install dependencies using [uv](https://github.com/astral-sh/uv):
+The API lives in the `api` directory. Install dependencies using
+[uv](https://github.com/astral-sh/uv):
 
 ```bash
-uv pip install -r requirements.txt
-uv pip install -r requirements-test.txt
+uv pip install -r api/requirements.txt
+uv pip install -r api/requirements-test.txt
 ```
 
-Run the API:
+Run the API from within the `api` directory:
 
 ```bash
 uvicorn app.main:app --reload
@@ -36,11 +37,21 @@ docker compose up
 
 The volume keeps the Postgres data between runs.
 
+## Frontend
+
+A simple React frontend lives in the `frontend` folder. It is served from a
+separate container defined in `docker-compose.yml`. When running the stack with
+Docker Compose, the frontend will be available at <http://localhost:3000> and
+proxies API requests to the FastAPI service. The UI makes use of the
+[shadcn/ui](https://ui.shadcn.com) component library with Tailwind CSS and
+provides forms to manage films and film usage records.
+
 ## Tests
 
-Tests use pytest:
+From within the `api` directory, run the tests with pytest:
 
 ```bash
+cd api
 pytest
 ```
 
