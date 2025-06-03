@@ -1,0 +1,12 @@
+[project]
+name = "filmtracker-api"
+version = "0.1.0"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "sqlmodel",
+    "alembic"
+]
+
+[project.optional-dependencies]
+test = ["pytest", "httpx"]
