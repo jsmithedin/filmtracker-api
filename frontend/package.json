@@ -25,6 +25,9 @@
     "postcss": "^8.4.21",
     "autoprefixer": "^10.4.14",
     "tailwindcss-animate": "^1.0.7",
-    "shadcn-ui": "^0.9.5"
+    "shadcn-ui": "^0.9.5",
+    "typescript": "^5.2.2",
+    "@types/react": "^18.2.36",
+    "@types/react-dom": "^18.2.14"
   }
 }

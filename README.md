@@ -42,9 +42,9 @@ The volume keeps the Postgres data between runs.
 A simple React frontend lives in the `frontend` folder. It is served from a
 separate container defined in `docker-compose.yml`. When running the stack with
 Docker Compose, the frontend will be available at <http://localhost:3000> and
-proxies API requests to the FastAPI service. The UI makes use of the
-[shadcn/ui](https://ui.shadcn.com) component library with Tailwind CSS and
-provides forms to manage films and film usage records.
+proxies API requests to the FastAPI service. The UI is written in **TypeScript**
+and uses the [shadcn/ui](https://ui.shadcn.com) component library with Tailwind
+CSS. It provides forms to manage films and film usage records.
 
 ## Tests
 
