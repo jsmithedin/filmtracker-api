@@ -6,8 +6,8 @@ import FilmUses from './pages/FilmUses'
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="p-4 space-y-4">
-        <nav className="flex items-center gap-4 mb-4">
+      <div className="p-4 space-y-4 max-w-screen-lg mx-auto">
+        <nav className="flex flex-wrap items-center gap-4 mb-4">
           <Link to="/films" className="underline">
             Film Stock
           </Link>

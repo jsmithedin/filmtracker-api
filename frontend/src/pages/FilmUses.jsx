@@ -69,7 +69,7 @@ export default function FilmUses() {
   const filmMap = Object.fromEntries(films.map((f) => [f.id, f]))
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-screen-lg mx-auto">
       <section>
         <h2 className="text-xl font-semibold mb-2">Log Film Use</h2>
         <form onSubmit={addUse} className="space-y-2">
