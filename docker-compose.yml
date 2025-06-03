@@ -9,12 +9,18 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
   api:
-    build: .
+    build: ./api
     depends_on:
       - db
     environment:
       DATABASE_URL: postgresql+psycopg2://film:film@db:5432/filmdb
     ports:
       - "8000:8000"
+  frontend:
+    build: ./frontend
+    depends_on:
+      - api
+    ports:
+      - "3000:80"
 volumes:
   db-data:

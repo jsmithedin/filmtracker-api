@@ -17,10 +17,12 @@ jobs:
         run: pip install uv
       - name: Install dependencies
         run: |
-          uv pip install --system -r requirements.txt
-          uv pip install --system -r requirements-test.txt
+          uv pip install --system -r api/requirements.txt
+          uv pip install --system -r api/requirements-test.txt
       - name: Run tests
-        run: pytest -q
+        run: |
+          cd api
+          pytest -q
 
   integration:
     runs-on: ubuntu-latest
@@ -49,7 +51,9 @@ jobs:
         run: pip install uv
       - name: Install dependencies
         run: |
-          uv pip install --system -r requirements.txt
-          uv pip install --system -r requirements-test.txt
+          uv pip install --system -r api/requirements.txt
+          uv pip install --system -r api/requirements-test.txt
       - name: Run integration tests
-        run: pytest -q tests/integration
+        run: |
+          cd api
+          pytest -q tests/integration
