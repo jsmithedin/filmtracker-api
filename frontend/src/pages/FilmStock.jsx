@@ -3,8 +3,27 @@ import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
 
+function Modal({ open, onClose, children }) {
+  if (!open) return null
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      onClick={onClose}
+    >
+      <div
+        className="rounded-md bg-white p-4 shadow-md dark:bg-gray-900"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {children}
+      </div>
+    </div>
+  )
+}
+
 export default function FilmStock() {
   const [films, setFilms] = useState([])
+  const [editedQuantities, setEditedQuantities] = useState({})
+  const [showModal, setShowModal] = useState(false)
   const [newFilm, setNewFilm] = useState({
     manufacturer: '',
     name: '',
@@ -13,13 +32,22 @@ export default function FilmStock() {
     iso: 100,
     quantity: 1
   })
+  const [formatFilter, setFormatFilter] = useState('')
+  const [typeFilter, setTypeFilter] = useState('')
   const [sortField, setSortField] = useState('manufacturer')
   const [sortAsc, setSortAsc] = useState(true)
 
   const fetchFilms = () =>
     fetch('/api/films/')
       .then((res) => res.json())
-      .then(setFilms)
+      .then((data) => {
+        setFilms(data)
+        const q = {}
+        data.forEach((f) => {
+          q[f.id] = f.quantity
+        })
+        setEditedQuantities(q)
+      })
 
   useEffect(() => {
     fetchFilms()
@@ -49,13 +77,22 @@ export default function FilmStock() {
         iso: 100,
         quantity: 1
       })
+      setShowModal(false)
     })
   }
 
-  const updateQuantity = (id, quantity) => {
-    fetch(`/api/films/${id}?quantity=${quantity}`, { method: 'PATCH' }).then(
-      fetchFilms
-    )
+  const handleQuantityChange = (id, quantity) => {
+    setEditedQuantities({ ...editedQuantities, [id]: quantity })
+  }
+
+  const confirmUpdates = () => {
+    Promise.all(
+      films.map((film) =>
+        fetch(`/api/films/${film.id}?quantity=${editedQuantities[film.id]}`, {
+          method: 'PATCH'
+        })
+      )
+    ).then(fetchFilms)
   }
 
   const handleSort = (field) => {
@@ -67,7 +104,13 @@ export default function FilmStock() {
     }
   }
 
-  const sortedFilms = [...films].sort((a, b) => {
+  const filteredFilms = films.filter(
+    (f) =>
+      (!typeFilter || f.type === typeFilter) &&
+      (!formatFilter || f.format === formatFilter)
+  )
+
+  const sortedFilms = [...filteredFilms].sort((a, b) => {
     if (a[sortField] < b[sortField]) return sortAsc ? -1 : 1
     if (a[sortField] > b[sortField]) return sortAsc ? 1 : -1
     return 0
@@ -75,7 +118,8 @@ export default function FilmStock() {
 
   return (
     <div className="space-y-6">
-      <section>
+      <Button onClick={() => setShowModal(true)}>Add Film</Button>
+      <Modal open={showModal} onClose={() => setShowModal(false)}>
         <h2 className="text-xl font-semibold mb-2">Add Film</h2>
         <form onSubmit={addFilm} className="space-y-2">
           <div className="space-y-1">
@@ -147,12 +191,47 @@ export default function FilmStock() {
               onChange={handleFilmChange}
             />
           </div>
-          <Button type="submit">Add Film</Button>
+          <div className="flex justify-end gap-2">
+            <Button type="submit">Add Film</Button>
+            <Button variant="secondary" onClick={() => setShowModal(false)}>
+              Close
+            </Button>
+          </div>
         </form>
-      </section>
-
+      </Modal>
       <section>
         <h2 className="text-xl font-semibold mb-2">Film Stock</h2>
+        <div className="mb-2 flex gap-2">
+          <div>
+            <Label htmlFor="typeFilter">Type</Label>
+            <select
+              id="typeFilter"
+              value={typeFilter}
+              onChange={(e) => setTypeFilter(e.target.value)}
+              className="border rounded-md p-1"
+            >
+              <option value="">All</option>
+              <option value="BW">BW</option>
+              <option value="Colour">Colour</option>
+              <option value="Colour Reversal">Colour Reversal</option>
+            </select>
+          </div>
+          <div>
+            <Label htmlFor="formatFilter">Format</Label>
+            <select
+              id="formatFilter"
+              value={formatFilter}
+              onChange={(e) => setFormatFilter(e.target.value)}
+              className="border rounded-md p-1"
+            >
+              <option value="">All</option>
+              <option value="35mm">35mm</option>
+              <option value="120">120</option>
+              <option value="4x5">4x5</option>
+              <option value="Instant">Instant</option>
+            </select>
+          </div>
+        </div>
         <div className="overflow-x-auto">
           <table className="min-w-full border text-sm">
             <thead>
@@ -188,15 +267,20 @@ export default function FilmStock() {
                   <td className="p-2">
                     <Input
                       type="number"
-                      defaultValue={film.quantity}
+                      value={editedQuantities[film.id]}
                       className="w-20"
-                      onBlur={(e) => updateQuantity(film.id, e.target.value)}
+                      onChange={(e) =>
+                        handleQuantityChange(film.id, e.target.value)
+                      }
                     />
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+          <div className="mt-2 text-right">
+            <Button onClick={confirmUpdates}>Confirm Updates</Button>
+          </div>
         </div>
       </section>
     </div>
