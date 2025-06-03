@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom'
 import DarkModeToggle from './components/DarkModeToggle'
 import FilmStock from './pages/FilmStock'
 import FilmUses from './pages/FilmUses'
+import FilmStockCharts from './pages/FilmStockCharts'
 
 export default function App() {
   return (
@@ -14,6 +15,9 @@ export default function App() {
           <Link to="/uses" className="underline">
             Film Uses
           </Link>
+          <Link to="/charts" className="underline">
+            Charts
+          </Link>
           <div className="ml-auto">
             <DarkModeToggle />
           </div>
@@ -22,6 +26,7 @@ export default function App() {
           <Route path="/" element={<Navigate to="/films" replace />} />
           <Route path="/films" element={<FilmStock />} />
           <Route path="/uses" element={<FilmUses />} />
+          <Route path="/charts" element={<FilmStockCharts />} />
         </Routes>
       </div>
     </BrowserRouter>

@@ -14,7 +14,9 @@
     "tailwind-merge": "^2.2.1",
     "class-variance-authority": "^0.7.0",
     "lucide-react": "^0.379.0",
-    "react-router-dom": "^6.23.0"
+    "react-router-dom": "^6.23.0",
+    "chart.js": "^4.4.1",
+    "react-chartjs-2": "^5.2.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.0.0",
