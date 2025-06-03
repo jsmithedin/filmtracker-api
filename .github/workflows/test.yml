@@ -21,3 +21,35 @@ jobs:
           uv pip install --system -r requirements-test.txt
       - name: Run tests
         run: pytest -q
+
+  integration:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: film
+          POSTGRES_PASSWORD: film
+          POSTGRES_DB: filmdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U film"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql+psycopg2://film:film@localhost:5432/filmdb
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install uv
+        run: pip install uv
+      - name: Install dependencies
+        run: |
+          uv pip install --system -r requirements.txt
+          uv pip install --system -r requirements-test.txt
+      - name: Run integration tests
+        run: pytest -q tests/integration
