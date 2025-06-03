@@ -5,6 +5,11 @@ from sqlmodel import SQLModel
 
 from alembic import context
 
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).resolve().parents[1]))
+
 from app.models import Film, FilmUse
 from app.database import DATABASE_URL
 
