@@ -25,7 +25,12 @@ def create_use(use: FilmUseCreate, session=Depends(get_session)):
 
 @router.patch("/{use_id}", response_model=FilmUse)
 def update_use(use_id: UUID, use: FilmUseUpdate, session=Depends(get_session)):
-    film_use = session.get(FilmUse, use_id)
+    # Avoid UUID vs string mismatches when Postgres is used. Only cast
+    # to ``str`` for that dialect so SQLite-based tests continue to work.
+    if session.bind.dialect.name == "postgresql":
+        film_use = session.get(FilmUse, str(use_id))
+    else:
+        film_use = session.get(FilmUse, use_id)
     if not film_use:
         raise HTTPException(status_code=404, detail="Film use not found")
     for key, value in use.model_dump(exclude_unset=True).items():
