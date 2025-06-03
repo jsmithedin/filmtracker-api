@@ -1,12 +1,16 @@
 from fastapi import FastAPI
 from sqlmodel import SQLModel
+from contextlib import asynccontextmanager
 
 from .database import engine
 from .routers import films
 
-app = FastAPI(title="Film Tracker API")
-app.include_router(films.router)
 
-@app.on_event("startup")
-def on_startup():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     SQLModel.metadata.create_all(engine)
+    yield
+
+
+app = FastAPI(title="Film Tracker API", lifespan=lifespan)
+app.include_router(films.router)

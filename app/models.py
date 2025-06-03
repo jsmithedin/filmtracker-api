@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Optional
 from sqlmodel import Field, SQLModel
+from pydantic import ConfigDict
 
 class FilmType(str, Enum):
     bw = "BW"
@@ -14,6 +15,7 @@ class FilmFormat(str, Enum):
     instant = "Instant"
 
 class Film(SQLModel, table=True):
+    model_config = ConfigDict(use_enum_values=True)
     id: Optional[int] = Field(default=None, primary_key=True)
     manufacturer: str
     name: str
