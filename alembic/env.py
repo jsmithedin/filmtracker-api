@@ -5,7 +5,7 @@ from sqlmodel import SQLModel
 
 from alembic import context
 
-from app.models import Film
+from app.models import Film, FilmUse
 from app.database import DATABASE_URL
 
 config = context.config

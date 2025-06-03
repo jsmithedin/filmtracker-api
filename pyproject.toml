@@ -6,6 +6,7 @@ dependencies = [
     "uvicorn",
     "sqlmodel",
     "alembic"
+    ,"uuid6"
 ]
 
 [project.optional-dependencies]

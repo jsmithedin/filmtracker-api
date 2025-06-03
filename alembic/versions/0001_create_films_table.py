@@ -15,7 +15,7 @@ depends_on = None
 def upgrade():
     op.create_table(
         'film',
-        sa.Column('id', sa.Integer(), primary_key=True),
+        sa.Column('id', sa.String(length=36), primary_key=True),
         sa.Column('manufacturer', sa.String(), nullable=False),
         sa.Column('name', sa.String(), nullable=False),
         sa.Column('type', sa.String(), nullable=False),

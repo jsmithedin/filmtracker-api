@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import select
 from typing import List
+from uuid import UUID
 
 from ..models import Film
 from ..database import get_session
@@ -19,7 +20,7 @@ def create_film(film: Film, session=Depends(get_session)):
     return film
 
 @router.patch("/{film_id}", response_model=Film)
-def update_quantity(film_id: int, quantity: int, session=Depends(get_session)):
+def update_quantity(film_id: UUID, quantity: int, session=Depends(get_session)):
     film = session.get(Film, film_id)
     if not film:
         raise HTTPException(status_code=404, detail="Film not found")
