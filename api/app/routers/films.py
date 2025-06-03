@@ -21,7 +21,13 @@ def create_film(film: Film, session=Depends(get_session)):
 
 @router.patch("/{film_id}", response_model=Film)
 def update_quantity(film_id: UUID, quantity: int, session=Depends(get_session)):
-    film = session.get(Film, film_id)
+    # SQLModel stores UUID primary keys as strings when using Postgres.
+    # Cast to ``str`` only for that dialect to avoid mismatched
+    # comparisons while still supporting SQLite tests.
+    if session.bind.dialect.name == "postgresql":
+        film = session.get(Film, str(film_id))
+    else:
+        film = session.get(Film, film_id)
     if not film:
         raise HTTPException(status_code=404, detail="Film not found")
     film.quantity = quantity
