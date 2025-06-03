@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Sun, Moon } from 'lucide-react'
 
 export default function DarkModeToggle() {
-  const [enabled, setEnabled] = useState(() =>
+  const [enabled, setEnabled] = useState<boolean>(() =>
     localStorage.getItem('theme') === 'dark'
   )
 
