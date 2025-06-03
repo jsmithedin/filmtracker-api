@@ -85,14 +85,10 @@ export default function FilmStock() {
     setEditedQuantities({ ...editedQuantities, [id]: quantity })
   }
 
-  const confirmUpdates = () => {
-    Promise.all(
-      films.map((film) =>
-        fetch(`/api/films/${film.id}?quantity=${editedQuantities[film.id]}`, {
-          method: 'PATCH'
-        })
-      )
-    ).then(fetchFilms)
+  const updateQuantity = (id) => {
+    fetch(`/api/films/${id}?quantity=${editedQuantities[id]}`, {
+      method: 'PATCH'
+    }).then(fetchFilms)
   }
 
   const handleSort = (field) => {
@@ -117,7 +113,7 @@ export default function FilmStock() {
   })
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-screen-lg mx-auto">
       <Button onClick={() => setShowModal(true)}>Add Film</Button>
       <Modal open={showModal} onClose={() => setShowModal(false)}>
         <h2 className="text-xl font-semibold mb-2">Add Film</h2>
@@ -254,6 +250,7 @@ export default function FilmStock() {
                 <th className="p-2 cursor-pointer" onClick={() => handleSort('quantity')}>
                   Quantity
                 </th>
+                <th className="p-2">Update</th>
               </tr>
             </thead>
             <tbody>
@@ -274,13 +271,15 @@ export default function FilmStock() {
                       }
                     />
                   </td>
+                  <td className="p-2">
+                    <Button size="sm" onClick={() => updateQuantity(film.id)}>
+                      Confirm
+                    </Button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <div className="mt-2 text-right">
-            <Button onClick={confirmUpdates}>Confirm Updates</Button>
-          </div>
         </div>
       </section>
     </div>
